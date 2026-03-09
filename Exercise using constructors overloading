@@ -1,0 +1,128 @@
+import java.util.Scanner;
+import java.util.Arrays;
+
+class Stack {
+    private int[] arr;
+    private int top;
+    private int capacity;
+
+    // 1. Default Constructor
+    public Stack() {
+        this.capacity = 5; // Default size
+        this.arr = new int[capacity];
+        this.top = -1;
+    }
+
+    // 2. Parameterized Constructor
+    public Stack(int size) {
+        this.capacity = size;
+        this.arr = new int[capacity];
+        this.top = -1;
+    }
+
+    // 3. Copy Constructor (Deep Copy)
+    public Stack(Stack other) {
+        this.capacity = other.capacity;
+        this.top = other.top;
+        this.arr = new int[this.capacity];
+        for (int i = 0; i <= this.top; i++) {
+            this.arr[i] = other.arr[i];
+        }
+    }
+
+    public void push(int x) {
+        if (top == capacity - 1) {
+            System.out.println("Stack Overflow!");
+            return;
+        }
+        arr[++top] = x;
+        System.out.println("Pushed: " + x);
+    }
+
+    public void pop() {
+        if (top == -1) {
+            System.out.println("Stack Underflow!");
+            return;
+        }
+        System.out.println("Popped: " + arr[top--]);
+    }
+
+    public void show() {
+        if (top == -1) {
+            System.out.println("Stack is empty.");
+            return;
+        }
+        System.out.print("Stack elements: ");
+        for (int i = top; i >= 0; i--) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public void search(int x) {
+        for (int i = 0; i <= top; i++) {
+            if (arr[i] == x) {
+                System.out.println("Element " + x + " found at index " + i);
+                return;
+            }
+        }
+        System.out.println("Element not found.");
+    }
+
+    public void sort() {
+        if (top > 0) {
+            // Sorting only the active elements (0 to top)
+            Arrays.sort(arr, 0, top + 1);
+            System.out.println("Stack sorted (Ascending).");
+        }
+    }
+}
+
+public class StackClient {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter initial stack size: ");
+        int n = sc.nextInt();
+        
+        Stack myStack = new Stack(n);
+        int choice;
+
+        do {
+            System.out.println("\n--- STACK MENU ---");
+            System.out.println("1. Push  2. Pop  3. Show  4. Search  5. Sort  6. Test Copy Constructor  7. Exit");
+            System.out.print("Choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value: ");
+                    myStack.push(sc.nextInt());
+                    break;
+                case 2:
+                    myStack.pop();
+                    break;
+                case 3:
+                    myStack.show();
+                    break;
+                case 4:
+                    System.out.print("Enter search value: ");
+                    myStack.search(sc.nextInt());
+                    break;
+                case 5:
+                    myStack.sort();
+                    break;
+                case 6:
+                    Stack clonedStack = new Stack(myStack);
+                    System.out.print("Cloned ");
+                    clonedStack.show();
+                    break;
+                case 7:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        } while (choice != 7);
+        sc.close();
+    }
+}
