@@ -1,0 +1,94 @@
+import java.util.Scanner;
+
+class Matrix {
+    private int rows, cols;
+    private int[][] data;
+
+    // Parameterized constructor
+    public Matrix(int r, int c) {
+        this.rows = r;
+        this.cols = c;
+        this.data = new int[r][c];
+    }
+
+    // Method to read matrix data from user
+    public void getData(Scanner sc, String name) {
+        System.out.println("Enter elements for Matrix " + name + " (" + rows + "x" + cols + "):");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                data[i][j] = sc.nextInt();
+            }
+        }
+    }
+
+    // Matrix Addition (used for -A + B)
+    public static Matrix add(Matrix m1, Matrix m2) {
+        Matrix res = new Matrix(m1.rows, m1.cols);
+        for (int i = 0; i < m1.rows; i++)
+            for (int j = 0; j < m1.cols; j++)
+                res.data[i][j] = m1.data[i][j] + m2.data[i][j];
+        return res;
+    }
+
+    // Matrix Subtraction
+    public static Matrix subtract(Matrix m1, Matrix m2) {
+        Matrix res = new Matrix(m1.rows, m1.cols);
+        for (int i = 0; i < m1.rows; i++)
+            for (int j = 0; j < m1.cols; j++)
+                res.data[i][j] = m1.data[i][j] - m2.data[i][j];
+        return res;
+    }
+
+    // Matrix Multiplication
+    public static Matrix multiply(Matrix m1, Matrix m2) {
+        Matrix res = new Matrix(m1.rows, m2.cols);
+        for (int i = 0; i < m1.rows; i++) {
+            for (int j = 0; j < m2.cols; j++) {
+                for (int k = 0; k < m1.cols; k++) {
+                    res.data[i][j] += m1.data[i][j] * m2.data[i][j];
+                }
+            }
+        }
+        return res;
+    }
+
+    // Unary Minus (negates all elements of A)
+    public Matrix negate() {
+        Matrix res = new Matrix(rows, cols);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                res.data[i][j] = -this.data[i][j];
+        return res;
+    }
+
+    public void display() {
+        for (int[] row : data) {
+            for (int val : row) System.out.print(val + " ");
+            System.out.println();
+        }
+    }
+}
+
+public class MatrixClient {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter dimension n for square matrices (n x n): ");
+        int n = sc.nextInt();
+
+        Matrix A = new Matrix(n, n);
+        Matrix B = new Matrix(n, n);
+
+        A.getData(sc, "A");
+        B.getData(sc, "B");
+
+        // Evaluate R = (-A + B) - (A * B)
+        Matrix negA = A.negate();
+        Matrix part1 = Matrix.add(negA, B); // (-A + B)
+        Matrix part2 = Matrix.multiply(A, B); // (A * B)
+        Matrix R = Matrix.subtract(part1, part2); // Result
+
+        System.out.println("\nResultant Matrix R:");
+        R.display();
+        sc.close();
+    }
+}
