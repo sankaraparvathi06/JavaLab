@@ -1,0 +1,67 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+/* 
+<applet code="ArithmeticApplet" width=300 height=250>
+</applet> 
+*/
+
+public class ArithmeticApplet extends JApplet implements ActionListener {
+    JTextField txtNum1, txtNum2, txtResult;
+    JButton btnAdd, btnSub, btnMul, btnDiv;
+
+    public void init() {
+        // Use a FlowLayout for simplicity
+        setLayout(new FlowLayout());
+
+        // Initialize components
+        add(new JLabel("First Number:"));
+        txtNum1 = new JTextField(10);
+        add(txtNum1);
+
+        add(new JLabel("Second Number:"));
+        txtNum2 = new JTextField(10);
+        add(txtNum2);
+
+        btnAdd = new JButton("+");
+        btnSub = new JButton("-");
+        btnMul = new JButton("*");
+        btnDiv = new JButton("/");
+
+        // Add action listeners to buttons
+        btnAdd.addActionListener(this);
+        btnSub.addActionListener(this);
+        btnMul.addActionListener(this);
+        btnDiv.addActionListener(this);
+
+        add(btnAdd); add(btnSub); add(btnMul); add(btnDiv);
+
+        add(new JLabel("Result:"));
+        txtResult = new JTextField(10);
+        txtResult.setEditable(false);
+        add(txtResult);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        try {
+            double n1 = Double.parseDouble(txtNum1.getText());
+            double n2 = Double.parseDouble(txtNum2.getText());
+            double res = 0;
+
+            if (e.getSource() == btnAdd) res = n1 + n2;
+            else if (e.getSource() == btnSub) res = n1 - n2;
+            else if (e.getSource() == btnMul) res = n1 * n2;
+            else if (e.getSource() == btnDiv) {
+                if (n2 == 0) {
+                    txtResult.setText("Div by 0!");
+                    return;
+                }
+                res = n1 / n2;
+            }
+            txtResult.setText(String.valueOf(res));
+        } catch (NumberFormatException ex) {
+            txtResult.setText("Invalid Input");
+        }
+    }
+}
