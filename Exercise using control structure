@@ -1,0 +1,79 @@
+import java.util.Scanner;
+
+public class StudentFineSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Input Student Details
+        System.out.print("Enter Student ID: ");
+        String studentID = sc.nextLine();
+        System.out.print("Enter Student Name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter Number of Attempts: ");
+        int attempts = sc.nextInt();
+
+        double totalFine = 0;
+        int choice;
+
+        // Menu creation using switch inside do-while
+        do {
+            System.out.println("\n--- Type of Mistake Menu ---");
+            System.out.println("1. Not wearing ID (Rs 150/attempt)");
+            System.out.println("2. Not wearing shoes (Rs 250/attempt)");
+            System.out.println("3. Casual leave taken (Rs 10/day, if > 5 days)");
+            System.out.println("4. Not returning Library book (Rs 20/book/day)");
+            System.out.println("5. Breakage of Lab item (Rs 10,000/item)");
+            System.out.println("6. Exit and Generate Final List");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    totalFine += 150 * attempts;
+                    break;
+                case 2:
+                    totalFine += 250 * attempts;
+                    break;
+                case 3:
+                    System.out.print("Enter number of days leave taken: ");
+                    int days = sc.nextInt();
+                    if (days > 5) {
+                        totalFine += days * 10;
+                    }
+                    break;
+                case 4:
+                    System.out.print("Enter number of books: ");
+                    int books = sc.nextInt();
+                    System.out.print("Enter number of days delayed: ");
+                    int delayedDays = sc.nextInt();
+                    totalFine += (books * delayedDays * 20);
+                    break;
+                case 5:
+                    System.out.print("Enter number of lab items broken: ");
+                    int items = sc.nextInt();
+                    totalFine += items * 10000;
+                    break;
+                case 6:
+                    System.out.println("Generating fine list...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        } while (choice != 6);
+
+        // Individual Fine List Output
+        System.out.println("\n---------- INDIVIDUAL FINE LIST ----------");
+        System.out.println("Student ID: " + studentID);
+        System.out.println("Student Name: " + name);
+        System.out.println("Number of Attempts: " + attempts);
+        System.out.printf("Total Fine Amount: Rs. %.2f\n", totalFine);
+
+        // Suspension Warning logic
+        if (totalFine > 50) {
+            System.out.println("WARNING MESSAGE: Suspension Warning Issued.");
+        }
+        System.out.println("-------------------------------------------");
+
+        sc.close();
+    }
+}
