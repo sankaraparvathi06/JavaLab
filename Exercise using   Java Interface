@@ -1,0 +1,93 @@
+import java.util.Scanner;
+
+// Interface defining the transformation contract
+interface Transformations {
+    void translate(double dx, double dy);
+    void scale(double sx, double sy);
+    void rotate(double angleDegrees);
+}
+
+// Implementation class representing a 2D Point
+class Point implements Transformations {
+    private double x, y;
+
+    // Parameterized constructor
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    // Implementation of Translation: Shifting the point
+    @Override
+    public void translate(double dx, double dy) {
+        this.x += dx;
+        this.y += dy;
+    }
+
+    // Implementation of Scaling: Multiplying coordinates by factors
+    @Override
+    public void scale(double sx, double sy) {
+        this.x *= sx;
+        this.y *= sy;
+    }
+
+    // Implementation of Rotation: Rotating around the origin (0,0)
+    @Override
+    public void rotate(double angleDegrees) {
+        double radians = Math.toRadians(angleDegrees);
+        double newX = x * Math.cos(radians) - y * Math.sin(radians);
+        double newY = x * Math.sin(radians) + y * Math.cos(radians);
+        this.x = newX;
+        this.y = newY;
+    }
+
+    // Method to calculate distance between this point and another point
+    public double calculate(Point other) {
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    }
+
+    public void display(String label) {
+        System.out.printf("%s: (%.2f, %.2f)\n", label, x, y);
+    }
+}
+
+// Client Code
+public class GeometryClient {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of points (N): ");
+        int n = sc.nextInt();
+        Point[] points = new Point[n];
+
+        // Creating N points
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter x and y for Point " + (i + 1) + ": ");
+            points[i] = new Point(sc.nextDouble(), sc.nextDouble());
+        }
+
+        // Testing Transformations on the first point (if exists)
+        if (n > 0) {
+            System.out.println("\n--- Testing Transformations on Point 1 ---");
+            points[0].display("Original");
+            
+            points[0].translate(5, 5);
+            points[0].display("After Translation (+5, +5)");
+            
+            points[0].scale(2, 2);
+            points[0].display("After Scaling (x2)");
+            
+            points[0].rotate(90);
+            points[0].display("After 90 degree Rotation");
+        }
+
+        // Testing distance between the first two points
+        if (n >= 2) {
+            System.out.println("\n--- Testing Distance Calculation ---");
+            double dist = points[0].calculate(points[1]);
+            System.out.printf("Distance between Point 1 and Point 2: %.4f units\n", dist);
+        }
+
+        sc.close();
+    }
+}
