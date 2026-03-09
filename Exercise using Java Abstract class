@@ -1,0 +1,113 @@
+import java.util.Scanner;
+
+abstract class Media {
+    protected String title;
+    protected String publication;
+
+    // Abstract methods to be implemented by subclasses
+    abstract void read(Scanner sc);
+    abstract void show();
+}
+
+class Book extends Media {
+    private int pages;
+    private static int thickBookCount = 0; // Static counter
+
+    @Override
+    void read(Scanner sc) {
+        System.out.print("Enter Book Title: ");
+        sc.nextLine(); // Clear buffer
+        title = sc.nextLine();
+        System.out.print("Enter Publication: ");
+        publication = sc.nextLine();
+        System.out.print("Enter Number of Pages: ");
+        pages = sc.nextInt();
+        
+        // Update static count if book is > 400 pages
+        if (pages > 400) {
+            thickBookCount++;
+        }
+    }
+
+    @Override
+    void show() {
+        System.out.println("Book: " + title + " | Pub: " + publication + " | Pages: " + pages);
+    }
+
+    // Static method to get the count
+    public static int count() {
+        return thickBookCount;
+    }
+}
+
+class Tape extends Media {
+    private int playingTime; // in minutes
+
+    @Override
+    void read(Scanner sc) {
+        System.out.print("Enter Tape Title: ");
+        sc.nextLine(); // Clear buffer
+        title = sc.nextLine();
+        System.out.print("Enter Publication: ");
+        publication = sc.nextLine();
+        System.out.print("Enter Playing Time (mins): ");
+        playingTime = sc.nextInt();
+    }
+
+    @Override
+    void show() {
+        System.out.println("Tape: " + title + " | Pub: " + publication + " | Time: " + playingTime + " mins");
+    }
+
+    public int getPlayingTime() {
+        return playingTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+}
+
+public class BookshopClient {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of books (n): ");
+        int n = sc.nextInt();
+        Book[] books = new Book[n];
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nDetails for Book " + (i + 1));
+            books[i] = new Book();
+            books[i].read(sc);
+        }
+
+        System.out.print("\nEnter number of tapes (m): ");
+        int m = sc.nextInt();
+        Tape[] tapes = new Tape[m];
+        for (int i = 0; i < m; i++) {
+            System.out.println("\nDetails for Tape " + (i + 1));
+            tapes[i] = new Tape();
+            tapes[i].read(sc);
+        }
+
+        System.out.println("\n--- All Media Records ---");
+        for (Book b : books) b.show();
+        for (Tape t : tapes) t.show();
+
+        // Testing static count method
+        System.out.println("\nTotal Books with > 400 pages: " + Book.count());
+
+        // Filtering tapes > 60 mins
+        System.out.println("\nTapes with playing time > 60 minutes:");
+        boolean found = false;
+        for (Tape t : tapes) {
+            if (t.getPlayingTime() > 60) {
+                System.out.println("- " + t.getTitle());
+                found = true;
+            }
+        }
+        if (!found) System.out.println("None found.");
+
+        sc.close();
+    }
+}
